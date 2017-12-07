@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {Route} from 'react-router-dom'
-import Auth from './routes/auth'
+import Auth from './components/routes/auth'
 
 class App extends Component {
     static propTypes = {
