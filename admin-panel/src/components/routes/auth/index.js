@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {Route, NavLink} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {signIn, signUp} from '../../../ducks/auth'
 import SignInForm from '../../auth/SignInForm'
 import SignUpForm from '../../auth/SignUpForm'
 
@@ -22,9 +24,9 @@ class Auth extends Component {
         )
     }
 
-    onSignIn = ({ email, password }) => console.log('---', 'sign in', email, password)
-    onSignUp = ({ email, password }) => console.log('---', 'sign up', email, password)
+    onSignIn = ({ email, password }) => this.props.signIn(email, password)
+    onSignUp = ({ email, password }) => this.props.signUp(email, password)
 
 }
 
-export default Auth
+export default connect(null, { signIn, signUp })(Auth)
