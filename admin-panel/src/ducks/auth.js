@@ -10,6 +10,7 @@ const prefix = `${appName}/${moduleName}`
 
 export const SIGN_IN_START = `${prefix}/SIGN_IN_START`
 export const SIGN_IN_SUCCESS = `${prefix}/SIGN_IN_SUCCESS`
+export const SIGN_IN_FAIL = `${prefix}/SIGN_IN_FAIL`
 export const SIGN_UP_START = `${prefix}/SIGN_UP_START`
 export const SIGN_UP_SUCCESS = `${prefix}/SIGN_UP_SUCCESS`
 
@@ -35,6 +36,10 @@ export default function reducer(state = new ReducerRecord(), action) {
             return state
                 .set('loading', false)
                 .set('user', payload.user)
+        case SIGN_IN_FAIL:
+            return state
+              .set('loading', false)
+              .set('error', payload.error.message)
         default:
             return state
     }
@@ -45,6 +50,8 @@ export default function reducer(state = new ReducerRecord(), action) {
  * */
 
 export const userSelector = state => state[moduleName].user
+export const userLoaderSelector = state => state[moduleName].loading
+export const userErrorSelector =  state => state[moduleName].error
 
 /**
  * Action Creators
@@ -61,6 +68,10 @@ export function signIn(email, password) {
                 type: SIGN_IN_SUCCESS,
                 payload: { user }
             }))
+        .catch(error => dispatch({
+              type: SIGN_IN_FAIL,
+              payload: { error }
+          }))
     }
 }
 
