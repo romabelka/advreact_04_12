@@ -1,14 +1,14 @@
-import firebase from 'firebase'
+import firebase from "firebase";
 
-export const appName = 'advreact-04-12'
+export const appName = "adv-react-lykovrs";
 
 const config = {
-    apiKey: "AIzaSyCmDWlgYIhtEr1pWjgKYds3iXKWBl9wbjE",
-    authDomain: `${appName}.firebaseapp.com`,
-    databaseURL: `https://${appName}.firebaseio.com`,
-    projectId: appName,
-    storageBucket: "",
-    messagingSenderId: "95255462276"
-}
+  apiKey: "AIzaSyBt2lilyVzkwxC5U0Jff1kGPgrR0stMww0",
+  authDomain: `${appName}.firebaseapp.com`,
+  databaseURL: `https://${appName}.firebaseio.com`,
+  projectId: appName,
+  storageBucket: "",
+  messagingSenderId: "347411917883",
+};
 
-firebase.initializeApp(config)
+firebase.initializeApp(config);
