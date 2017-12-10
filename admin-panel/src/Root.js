@@ -1,24 +1,22 @@
-import React, { Component } from 'react'
-import {ConnectedRouter as Router} from 'react-router-redux'
-import {Provider} from 'react-redux'
-import App from './App'
-import store from './redux'
-import history from './history'
+import React, { Component } from "react";
+import { ConnectedRouter as Router } from "react-router-redux";
+import { Provider } from "react-redux";
+import App from "./App";
+import store from "./redux";
+import history from "./history";
 
 class Root extends Component {
-    static propTypes = {
+  static propTypes = {};
 
-    };
-
-    render() {
-        return (
-            <Provider store={store}>
-                <Router history={history}>
-                    <App />
-                </Router>
-            </Provider>
-        )
-    }
+  render() {
+    return (
+      <Provider store={store}>
+        <Router history={history}>
+          <App />
+        </Router>
+      </Provider>
+    );
+  }
 }
 
-export default Root
+export default Root;

@@ -1,17 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
+import AddPeopleForm from "../peoples/AddPeopleForm";
+import { addPeople } from "../../ducks/peoples";
+import { connect } from "react-redux";
 
 class Admin extends Component {
-    static propTypes = {
+  static propTypes = {};
 
-    };
+  render() {
+    return (
+      <div>
+        <h2>Admin Page</h2>
+        <AddPeopleForm onSubmit={this.sendPeople} />
+      </div>
+    );
+  }
 
-    render() {
-        return (
-            <div>
-                <h2>Admin Page</h2>
-            </div>
-        )
-    }
+  sendPeople = (people ) => this.props.addPeople(people);
 }
 
-export default Admin
+export default connect(null, { addPeople })(Admin);
