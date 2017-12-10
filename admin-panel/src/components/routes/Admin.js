@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import AddPeopleForm from "../peoples/AddPeopleForm";
-import { addPeople } from "../../ducks/peoples";
+import AddPeopleForm from "../people/AddPeopleForm";
+import { addPeople } from "../../ducks/people";
 import { connect } from "react-redux";
 
 class Admin extends Component {

@@ -5,7 +5,7 @@ import firebase from "firebase";
 /**
  * Constants
  * */
-export const moduleName = "peoples";
+export const moduleName = "people";
 const prefix = `${appName}/${moduleName}`;
 
 export const ADD_PEOPLE_START = `${prefix}/ADD_PEOPLE_START`;
@@ -38,7 +38,6 @@ export default function reducer(state = new ReducerRecord(), action) {
  * Selectors
  * */
 
-// export const userSelector = state => state[moduleName].user;
 
 /**
  * Action Creators
@@ -53,12 +52,11 @@ export function addPeople(people) {
     var newPostKey = firebase
       .database()
       .ref()
-      .child("peoples")
+      .child("people")
       .push().key;
 
     var updates = {};
-    updates["/users/" + newPostKey] = people;
-    updates["/user/" + newPostKey] = people;
+    updates["/people/" + newPostKey] = people;
 
     firebase
       .database()
@@ -71,3 +69,4 @@ export function addPeople(people) {
       );
   };
 }
+
