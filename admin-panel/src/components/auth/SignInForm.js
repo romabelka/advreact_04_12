@@ -27,12 +27,9 @@ class SignInForm extends Component {
     }
 }
 
-export default connect(state => {
-    console.log('---', 3333, errorSelector(state))
-    return {
+export default connect(state => ({
         loading: loadingSelector(state),
         authError: errorSelector(state)
-    }
-})(reduxForm({
+}))(reduxForm({
     form: 'auth'
 })(SignInForm))
