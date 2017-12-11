@@ -45,6 +45,7 @@ export default function reducer(state = new ReducerRecord(), action) {
  * */
 
 export const userSelector = state => state[moduleName].user
+export const loadingSelector = state => ({loading: state[moduleName].loading})
 
 /**
  * Action Creators
