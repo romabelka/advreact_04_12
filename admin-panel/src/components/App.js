@@ -5,6 +5,7 @@ import AdminPage from './routes/Admin'
 import ProtectedRoute from './common/ProtectedRoute'
 import PersonPage from './routes/PersonPage'
 import PeopleListPage from './routes/PeopleListPage'
+import EventsListPage from './routes/EventsListPage'
 
 class App extends Component {
     static propTypes = {
@@ -22,6 +23,7 @@ class App extends Component {
                 <ProtectedRoute path = '/admin' component = {AdminPage}/>
                 <ProtectedRoute path="/people" exact component={PersonPage}/>
                 <ProtectedRoute path="/people/list" component={PeopleListPage}/>
+                <ProtectedRoute path="/events/list" component={EventsListPage}/>
                 <Route path = '/auth' component = {AuthPage}/>
             </div>
         )
