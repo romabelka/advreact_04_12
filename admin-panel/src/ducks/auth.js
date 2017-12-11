@@ -1,3 +1,4 @@
+import {all, takeEvery, take, put, apply, call} from 'redux-saga/effects'
 import {appName} from '../config'
 import {createSelector} from 'reselect'
 import {Record} from 'immutable'
@@ -9,9 +10,12 @@ import firebase from 'firebase'
 export const moduleName = 'auth'
 const prefix = `${appName}/${moduleName}`
 
+export const SIGN_IN_REQUEST = `${prefix}/SIGN_IN_REQUEST`
 export const SIGN_IN_START = `${prefix}/SIGN_IN_START`
 export const SIGN_IN_SUCCESS = `${prefix}/SIGN_IN_SUCCESS`
 export const SIGN_IN_ERROR = `${prefix}/SIGN_IN_ERROR`
+
+export const SIGN_UP_REQUEST = `${prefix}/SIGN_UP_REQUEST`
 export const SIGN_UP_START = `${prefix}/SIGN_UP_START`
 export const SIGN_UP_SUCCESS = `${prefix}/SIGN_UP_SUCCESS`
 export const SIGN_UP_ERROR = `${prefix}/SIGN_UP_ERROR`
@@ -65,41 +69,21 @@ export const loadingSelector = createSelector(stateSelector, state => state.load
  * Action Creators
  * */
 
-export function signIn(email, password) {
-    return (dispatch) => {
-        dispatch({
-            type: SIGN_IN_START
-        })
-
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(user => dispatch({
-                type: SIGN_IN_SUCCESS,
-                payload: { user }
-            }))
-            .catch(error => dispatch({
-                type: SIGN_IN_ERROR,
-                payload: { error }
-            }))
-    }
-}
-
 export function signUp(email, password) {
-    return (dispatch) => {
-        dispatch({
-            type: SIGN_UP_START
-        })
-
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(user => dispatch({
-                type: SIGN_UP_SUCCESS,
-                payload: { user }
-            }))
-            .catch(error => dispatch({
-                type: SIGN_UP_ERROR,
-                payload: { error }
-            }))
+    return {
+        type: SIGN_UP_REQUEST,
+        payload: { email, password }
     }
 }
+
+
+export function signIn(email, password) {
+    return {
+        type: SIGN_IN_REQUEST,
+        payload: { email, password }
+    }
+}
+
 
 firebase.auth().onAuthStateChanged(user => {
     if (user) window.store.dispatch({
@@ -107,3 +91,65 @@ firebase.auth().onAuthStateChanged(user => {
         payload: { user }
     })
 })
+
+/**
+ * Sagas
+ */
+
+export const signUpSaga = function * () {
+    while (true) {
+        const action = yield take(SIGN_UP_REQUEST)
+        const {email, password} = action.payload
+
+        yield put({
+            type: SIGN_UP_START
+        })
+
+        try {
+            const auth = firebase.auth()
+            const user = yield call([auth, auth.createUserWithEmailAndPassword], email, password)
+
+            yield put({
+                type: SIGN_UP_SUCCESS,
+                payload: {user}
+            })
+
+        } catch (error) {
+            yield put({
+                type: SIGN_UP_ERROR,
+                payload: {error}
+            })
+        }
+    }
+}
+
+export const signInSaga = function * (action) {
+    const { email, password } = action.payload
+
+    yield put({
+        type: SIGN_IN_START
+    })
+
+    try {
+        const auth = firebase.auth()
+        const user = yield apply(auth, auth.signInWithEmailAndPassword, [email, password])
+
+        yield put({
+            type: SIGN_IN_SUCCESS,
+            payload: { user }
+        })
+
+    } catch (error) {
+        yield put({
+            type: SIGN_IN_ERROR,
+            payload: { error }
+        })
+    }
+}
+
+export const saga = function * () {
+    yield all([
+        takeEvery(SIGN_IN_REQUEST, signInSaga),
+        signUpSaga()
+    ])
+}

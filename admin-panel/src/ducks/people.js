@@ -1,6 +1,6 @@
 import {appName} from '../config'
 import {Record, List} from 'immutable'
-import {put, call, takeEvery} from 'redux-saga/effects'
+import {put, call, all, takeEvery} from 'redux-saga/effects'
 import {generateId} from './utils'
 
 /**
@@ -68,5 +68,7 @@ export const addPersonSaga = function * (action) {
 }
 
 export const saga = function * () {
-    yield takeEvery(ADD_PERSON, addPersonSaga)
+    yield all([
+        takeEvery(ADD_PERSON, addPersonSaga)
+    ])
 }
