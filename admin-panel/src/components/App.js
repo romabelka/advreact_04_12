@@ -4,6 +4,7 @@ import AuthPage from './routes/auth'
 import AdminPage from './routes/Admin'
 import ProtectedRoute from './common/ProtectedRoute'
 import PersonPage from './routes/PersonPage'
+import PeopleListPage from './routes/PeopleListPage'
 
 class App extends Component {
     static propTypes = {
@@ -19,7 +20,8 @@ class App extends Component {
                     <li><NavLink to='/people' activeStyle = {{color: 'red'}}>people</NavLink></li>
                 </ul>
                 <ProtectedRoute path = '/admin' component = {AdminPage}/>
-                <ProtectedRoute path="/people" component={PersonPage}/>
+                <ProtectedRoute path="/people" exact component={PersonPage}/>
+                <ProtectedRoute path="/people/list" component={PeopleListPage}/>
                 <Route path = '/auth' component = {AuthPage}/>
             </div>
         )
