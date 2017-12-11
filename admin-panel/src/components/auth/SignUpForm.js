@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import {reduxForm, Field} from 'redux-form'
 import validator from 'email-validator'
 import ErrorField from '../common/ErrorField'
+import Loader from '../common/Loader'
+import {loadingSelector, errorSelector} from '../../ducks/auth'
 
 class SignUpForm extends Component {
     static propTypes = {
@@ -9,16 +12,15 @@ class SignUpForm extends Component {
     };
 
     render() {
+        const {loading, authError} = this.props
         return (
             <div>
                 <h3>Sign In</h3>
                 <form onSubmit={this.props.handleSubmit}>
-                    <div>
-                        email: <Field name='email' component={ErrorField}/>
-                    </div>
-                    <div>
-                        password: <Field name='password' component={ErrorField} type='password'/>
-                    </div>
+                    <Field name='email' component={ErrorField}/>
+                    <Field name='password' component={ErrorField} type='password'/>
+                    {authError && <h2 style={{color: 'red'}}>{authError}</h2>}
+                    {loading && <Loader />}
                     <input type='submit' />
                 </form>
 
@@ -39,7 +41,10 @@ const validate = ({ email, password }) => {
     return errors
 }
 
-export default reduxForm({
+export default connect(state => ({
+    loading: loadingSelector(state),
+    authError: errorSelector(state)
+}))(reduxForm({
     form: 'auth',
     validate
-})(SignUpForm)
+})(SignUpForm))
