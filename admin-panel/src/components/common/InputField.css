@@ -1,0 +1,24 @@
+.input-field__label {
+  font-weight: bold;
+}
+
+.input-field__input {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+
+.input-field__input:hover {
+  border-color: #49a9ee;
+}
+
+.input-field__input:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(16,142,233,.2);
+}
+
+.input-field__error {
+  display: block;
+  color: #FF0000;
+  font-size: 0.85em;
+}
