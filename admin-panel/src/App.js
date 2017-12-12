@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {Route} from 'react-router-dom'
 import Auth from './components/routes/auth'
-import Admin from './components/routes/admin/'
+import Admin from './components/routes/Admin'
 import ProtectedRoute from './components/common/ProtectedRoute'
 
 class App extends Component {
