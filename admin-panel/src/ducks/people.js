@@ -1,6 +1,7 @@
 import {appName} from '../config'
 import {Record, List} from 'immutable'
 import {put, call, all, takeEvery} from 'redux-saga/effects'
+import {reset} from 'redux-form';
 import {generateId} from './utils'
 
 /**
@@ -10,6 +11,7 @@ export const moduleName = 'people'
 const prefix = `${appName}/${moduleName}`
 export const ADD_PERSON = `${prefix}/ADD_PERSON`
 export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
+export const ADD_PERSON_ERROR = `${prefix}/ADD_PERSON_ERROR`
 
 /**
  * Reducer
@@ -59,12 +61,20 @@ export function addPerson(person) {
 export const addPersonSaga = function * (action) {
     const { person } = action.payload
 
-    const id = yield call(generateId)
+    try {
+        const id = yield call(generateId)
 
-    yield put({
-        type: ADD_PERSON_SUCCESS,
-        payload: {id, ...person}
-    })
+        yield put({
+            type: ADD_PERSON_SUCCESS,
+            payload: { id, ...person }
+        })
+        yield put(reset('person'))
+    }catch(error){
+        yield put({
+            type: ADD_PERSON_ERROR,
+            payload: { error }
+        })
+    }
 }
 
 export const saga = function * () {

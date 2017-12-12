@@ -12,16 +12,16 @@ class App extends Component {
 
     render() {
         return (
-            <div>
-                <h1>Hello world</h1>
-                <ul>
-                    <li><NavLink to='/admin' activeStyle = {{color: 'red'}}>admin</NavLink></li>
-                    <li><NavLink to='/people' activeStyle = {{color: 'red'}}>people</NavLink></li>
-                </ul>
-                <ProtectedRoute path = '/admin' component = {AdminPage}/>
-                <ProtectedRoute path="/people" component={PersonPage}/>
-                <Route path = '/auth' component = {AuthPage}/>
-            </div>
+          <div>
+              <h1>Hello world</h1>
+              <ul>
+                  <li><NavLink to='/admin' activeStyle = {{color: 'red'}}>admin</NavLink></li>
+                  <li><NavLink to='/people' activeStyle = {{color: 'red'}}>people</NavLink></li>
+              </ul>
+              <ProtectedRoute path = '/admin' component = {AdminPage}/>
+              <ProtectedRoute path="/people" component={PersonPage}/>
+              <Route path = '/auth' component = {AuthPage}/>
+          </div>
         )
     }
 }

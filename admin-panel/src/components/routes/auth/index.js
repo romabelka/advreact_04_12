@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 //import styled from 'styled-components';
 
-import {signIn, signUp, userErrorSelector, userLoaderSelector} from '../../../ducks/auth'
+import {signIn, signUp, errorSelector, loadingSelector} from '../../../ducks/auth'
 import SignInForm from '../../auth/SignInForm'
 import SignUpForm from '../../auth/SignUpForm'
 //import spinner from '../../../static/preloader-xs.png';
@@ -51,6 +51,6 @@ class Auth extends Component {
 }
 
 export default connect(state => ({
-    error: userErrorSelector(state),
-    loading: userLoaderSelector(state)
+    error: errorSelector(state),
+    loading: loadingSelector(state)
 }), { signIn, signUp })(Auth)
