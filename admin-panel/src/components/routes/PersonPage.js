@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {addPerson} from '../../ducks/people'
+import {addPerson, peopleSelector} from '../../ducks/people'
 import NewPersonForm from '../people/NewPersonForm'
+import PeopleList from '../people/PeopleList';
 
 class PersonPage extends Component {
     static propTypes = {
@@ -9,13 +10,17 @@ class PersonPage extends Component {
     };
 
     render() {
+        const {addPerson, peopleList} = this.props;
         return (
             <div>
                 <h2>Add new person</h2>
-                <NewPersonForm onSubmit={this.props.addPerson}/>
+                <NewPersonForm onSubmit={addPerson}/>
+                <PeopleList list={peopleList}/>
             </div>
         )
     }
 }
 
-export default connect(null, {addPerson})(PersonPage)
+export default connect(state => ({
+    peopleList: peopleSelector(state)
+}), {addPerson})(PersonPage)
