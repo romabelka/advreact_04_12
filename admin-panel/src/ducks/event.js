@@ -1,5 +1,5 @@
 import {appName} from '../config'
-import {Record, Map,List} from 'immutable'
+import {Record, List} from 'immutable'
 import {put, call, all, takeEvery} from 'redux-saga/effects'
 import {createSelector} from 'reselect'
 

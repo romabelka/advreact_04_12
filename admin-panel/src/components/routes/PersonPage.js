@@ -1,25 +1,17 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {addPerson, peopleSelector} from '../../ducks/people'
 import NewPersonForm from '../people/NewPersonForm'
 import PeopleList from '../people/PeopleList';
 
-class PersonPage extends Component {
-    static propTypes = {
+const PersonPage =
+  ({addPerson, peopleList}) =>
+    <div>
+        <h2>Add new person</h2>
+        <NewPersonForm onSubmit={addPerson}/>
+        <PeopleList list={peopleList}/>
+    </div>
 
-    };
-
-    render() {
-        const {addPerson, peopleList} = this.props;
-        return (
-            <div>
-                <h2>Add new person</h2>
-                <NewPersonForm onSubmit={addPerson}/>
-                <PeopleList list={peopleList}/>
-            </div>
-        )
-    }
-}
 
 export default connect(state => ({
     peopleList: peopleSelector(state)
