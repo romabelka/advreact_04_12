@@ -1,44 +1,24 @@
 import React, {Component} from 'react'
-import firebase from 'firebase/index'
 
 class EventList extends Component {
     static propTypes = {
 
     };
 
-    state = {
-        events: null
-    }
+    render() {
+        const {events} = this.props
 
-    componentDidMount = () => {
-        const eventsRef = firebase.database().ref('events/');
-
-        eventsRef.on('value', (snapshot) => {
-            let events = []
-
-            snapshot.forEach((childSnapshot) => {
-                events.push({
-                    id: childSnapshot.key,
-                    ...childSnapshot.val()
-                })
-            });
-
-            this.setState({events: events});
-        });
-    }
-
-    getEventList = (events) => {
         return (
             <table>
                 <thead>
-                    <tr>
-                        <th>Month</th>
-                        <th>Deadline</th>
-                        <th>Title</th>
-                        <th>URL</th>
-                        <th>When</th>
-                        <th>Where</th>
-                    </tr>
+                <tr>
+                    <th>Month</th>
+                    <th>Deadline</th>
+                    <th>Title</th>
+                    <th>URL</th>
+                    <th>When</th>
+                    <th>Where</th>
+                </tr>
                 </thead>
                 <tbody>
                 {
@@ -55,16 +35,6 @@ class EventList extends Component {
                 }
                 </tbody>
             </table>
-        )
-    }
-
-    render() {
-        const {events} = this.state
-
-        return (
-            <div>
-                {!events ? <p>List is empty</p> : this.getEventList(events)}
-            </div>
         )
     }
 }
