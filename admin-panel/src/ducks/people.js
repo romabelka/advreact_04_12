@@ -2,6 +2,8 @@ import {appName} from '../config'
 import {Record, List} from 'immutable'
 import {put, call, all, takeEvery} from 'redux-saga/effects'
 import {generateId} from './utils'
+import {reset} from 'redux-form'
+import {createSelector} from 'reselect'
 
 /**
  * Constants
@@ -30,7 +32,7 @@ export default function reducer(state = new ReducerState(), action) {
 
     switch (type) {
         case ADD_PERSON_SUCCESS:
-            return state.update('entities', entities => entities.push(new PersonRecord(payload.person)))
+            return state.update('entities', entities => entities.push(new PersonRecord(payload)))
 
         default:
             return state
@@ -40,7 +42,8 @@ export default function reducer(state = new ReducerState(), action) {
 /**
  * Selectors
  * */
-
+export const stateSelector = state => state[moduleName]
+export const peopleSelector = createSelector(stateSelector, state => state.entities)
 /**
  * Action Creators
  * */
@@ -65,6 +68,8 @@ export const addPersonSaga = function * (action) {
         type: ADD_PERSON_SUCCESS,
         payload: {id, ...person}
     })
+
+    yield put(reset('person'))
 }
 
 export const saga = function * () {
