@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware} from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import logger from 'redux-logger'
 import {routerMiddleware} from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
@@ -8,11 +8,25 @@ import saga from './saga'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const store = createStore(reducer, applyMiddleware(sagaMiddleware, routerMiddleware(history), logger))
+// If Redux DevTools Extension is installed use it, otherwise use Redux compose
+/* eslint-disable no-underscore-dangle */
+const composeEnhancers =
+    process.env.NODE_ENV !== 'production' &&
+    typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
+/* eslint-enable */
+
+const enhancer = composeEnhancers(
+    applyMiddleware(sagaMiddleware, routerMiddleware(history), logger)
+);
+
+const store = createStore(reducer, enhancer)
 
 sagaMiddleware.run(saga)
 
-//dev only
-window.store = store
+if (process.env.NODE_ENV !== 'production') {
+    window.store = store;
+}
 
 export default store

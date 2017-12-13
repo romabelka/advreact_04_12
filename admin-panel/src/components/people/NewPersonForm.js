@@ -8,6 +8,14 @@ class NewPersonForm extends Component {
 
     };
 
+    componentWillReceiveProps = (nextProps) => {
+        const {submitSucceeded, reset} = this.props;
+
+        if (nextProps.submitSucceeded === true && nextProps.submitSucceeded !== submitSucceeded) {
+            reset('person');
+        }
+    }
+
     render() {
         return (
             <div>
