@@ -1,0 +1,15 @@
+.people-list {
+  width: 100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.people-list caption {
+  caption-side: top;
+  font-size: 1.3em;
+}
+
+.people-list th,
+.people-list td {
+  border: 1px solid black;
+}

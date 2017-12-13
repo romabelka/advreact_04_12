@@ -7,12 +7,12 @@ describe('people saga', () => {
         const person = {
             firstName: 'Roman',
             lastName: 'Iakobchuk',
-            email: 'r.iakobchuk@javascript.ru'
+            email: 'r.iakobchuk@javascript.ru',
         }
 
         const action = {
             type: ADD_PERSON,
-            payload: { person }
+            payload: { person, resolve: Promise.resolve }
         }
 
         const generator = addPersonSaga(action)
@@ -26,7 +26,8 @@ describe('people saga', () => {
             payload: {id, ...person}
         }))
 
-        expect(generator.next().done).toBe(true)
+        expect(generator.next().value).toEqual(call(Promise.resolve))
 
+        expect(generator.next().done).toBe(true)
     });
 });
