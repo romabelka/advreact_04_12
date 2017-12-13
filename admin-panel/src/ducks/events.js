@@ -76,8 +76,6 @@ function getFBEvents(ref) {
             })
         });
         return events;
-    }).then(function (events) {
-        return events;
     });
 }
 
