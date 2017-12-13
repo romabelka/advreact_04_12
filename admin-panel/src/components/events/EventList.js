@@ -12,7 +12,6 @@ class EventList extends Component {
 
     componentDidMount = () => {
         const eventsRef = firebase.database().ref('events/');
-        const _self = this;
 
         eventsRef.on('value', (snapshot) => {
             let events = []
@@ -24,7 +23,7 @@ class EventList extends Component {
                 })
             });
 
-            _self.setState({events: events});
+            this.setState({events: events});
         });
     }
 
