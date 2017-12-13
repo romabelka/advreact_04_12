@@ -6,4 +6,11 @@ export function saveEventsToFB() {
     conferences.forEach(conference  => eventsRef.push(conference))
 }
 
+export function getEventsFromFB() {
+    const db = firebase.database()
+    const eventsRef =  db.ref(`/events`)
+    return eventsRef.once('value').then(result => result.val()
+    );
+}
+
 window.saveEventsToFB = saveEventsToFB
