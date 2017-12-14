@@ -6,3 +6,7 @@
 ##HT2.2 Чистить форму people после успешного добавления в стор
 ##HT2.3 Отображать список людей
 ##HT2.4 Загружать и отображать список ивентов
+
+##HT3.1 Добавлять людей в firebase
+##HT3.2 Реализовать lazy-loading ивентов(InfiniteLoader), ref.orderByKey().startAt(...).limitToFirst(10)
+##HT3.3 Тесты на Virtualized Events
