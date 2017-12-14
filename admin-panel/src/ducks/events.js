@@ -1,6 +1,6 @@
 import {all, takeEvery, put, call} from 'redux-saga/effects'
 import {appName} from '../config'
-import {Record, List, OrderedMap} from 'immutable'
+import {Record, OrderedSet, OrderedMap} from 'immutable'
 import firebase from 'firebase'
 import {createSelector} from 'reselect'
 import {fbToEntities} from './utils'
@@ -15,12 +15,15 @@ export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`
 export const FETCH_ALL_START = `${prefix}/FETCH_ALL_START`
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`
 
+export const SELECT = `${prefix}/SELECT`
+
 /**
  * Reducer
  * */
 export const ReducerRecord = Record({
     loading: false,
     loaded: false,
+    selected: new OrderedSet(),
     entities: new OrderedMap({})
 })
 
@@ -47,6 +50,12 @@ export default function reducer(state = new ReducerRecord(), action) {
                 .set('loaded', true)
                 .set('entities', fbToEntities(payload, EventRecord))
 
+        case SELECT:
+            return state.update('selected', selected => selected.has(payload.uid)
+                ? selected.remove(payload.uid)
+                : selected.add(payload.uid)
+            )
+
         default:
             return state
     }
@@ -69,6 +78,13 @@ export const eventListSelector = createSelector(entitiesSelector, entities => en
 export function fetchAllEvents() {
     return {
         type: FETCH_ALL_REQUEST
+    }
+}
+
+export function selectEvent(uid) {
+    return {
+        type: SELECT,
+        payload: { uid }
     }
 }
 

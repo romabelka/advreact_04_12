@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {fetchAllEvents, eventListSelector, loadedSelector, loadingSelector} from '../../ducks/events'
+import {fetchAllEvents, selectEvent, eventListSelector, loadedSelector, loadingSelector} from '../../ducks/events'
 import Loader from '../common/Loader'
 
-class EventsTable extends Component {
+export class EventsTable extends Component {
     static propTypes = {
 
     };
@@ -26,7 +26,7 @@ class EventsTable extends Component {
     getRows = () => this.props.events.map(this.getRow)
 
     getRow = (event) => (
-        <tr key = {event.uid}>
+        <tr key = {event.uid} className="test__event_table_row" onClick = {() => this.props.selectEvent(event.uid)}>
             <td>{event.title}</td>
             <td>{event.when}</td>
             <td>{event.where}</td>
@@ -38,4 +38,4 @@ export default connect((state) => ({
     events: eventListSelector(state),
     loading: loadingSelector(state),
     loaded: loadedSelector(state)
-}), { fetchAllEvents })(EventsTable)
+}), { fetchAllEvents, selectEvent })(EventsTable)
