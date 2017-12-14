@@ -2,6 +2,7 @@ import {appName} from '../config'
 import {Record, List} from 'immutable'
 import {put, call, all, takeEvery} from 'redux-saga/effects'
 import {createSelector} from 'reselect'
+import { reset } from 'redux-form'
 import {generateId} from './utils'
 
 /**
@@ -49,10 +50,10 @@ export const peopleSelector = createSelector(stateSelector, state => state.entit
  * Action Creators
  * */
 
-export function addPerson(person, resolve) {
+export function addPerson(person) {
     return {
         type: ADD_PERSON,
-        payload: { person, resolve }
+        payload: { person }
     }
 }
 
@@ -61,7 +62,7 @@ export function addPerson(person, resolve) {
  */
 
 export const addPersonSaga = function * (action) {
-    const { person, resolve } = action.payload
+    const { person } = action.payload
     
     const id = yield call(generateId)
 
@@ -70,7 +71,7 @@ export const addPersonSaga = function * (action) {
         payload: {id, ...person}
     })
 
-    yield call(resolve)
+    yield put(reset('person'))
 }
 
 export const saga = function * () {

@@ -8,17 +8,10 @@ class NewPersonForm extends Component {
 
   };
 
-  submit = (values) => {
-    return new Promise((resolve) => {
-      this.props.addPerson(values, resolve)
-    })
-      .then(() => this.props.reset())
-  }
-
   render() {
     return (
       <div>
-        <form onSubmit={this.props.handleSubmit(this.submit)}>
+        <form onSubmit={this.props.handleSubmit}>
           <Field name="firstName" label="first name" component={ErrorField} />
           <Field name="lastName" label="last name" component={ErrorField} />
           <Field name="email" label="email" component={ErrorField} />

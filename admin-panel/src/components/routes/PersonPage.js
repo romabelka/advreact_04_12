@@ -13,7 +13,7 @@ class PersonPage extends Component {
         return (
             <div>
                 <h2>Add new person</h2>
-                <NewPersonForm addPerson={this.props.addPerson}/>
+                <NewPersonForm onSubmit={this.props.addPerson}/>
                 <PeopleList people={this.props.people}/>
             </div>
         )
