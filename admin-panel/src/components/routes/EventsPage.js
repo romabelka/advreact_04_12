@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import EventsTable from '../events/EventsTable'
+import EventsTableVirtualized from '../events/EventsTableVirtualized'
 
 class EventsPage extends Component {
     static propTypes = {
@@ -9,7 +9,7 @@ class EventsPage extends Component {
     render() {
         return (
             <div>
-                <EventsTable />
+                <EventsTableVirtualized />
             </div>
         )
     }
