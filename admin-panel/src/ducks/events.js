@@ -1,6 +1,6 @@
 import {all, takeEvery, put, call} from 'redux-saga/effects'
 import {appName} from '../config'
-import {Record, List} from 'immutable'
+import {Record, List, OrderedMap} from 'immutable'
 import firebase from 'firebase'
 import {createSelector} from 'reselect'
 import {fbToEntities} from './utils'
@@ -21,7 +21,7 @@ export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`
 export const ReducerRecord = Record({
     loading: false,
     loaded: false,
-    entities: new List([])
+    entities: new OrderedMap({})
 })
 
 export const EventRecord = Record({
@@ -60,7 +60,7 @@ export const stateSelector = state => state[moduleName]
 export const entitiesSelector = createSelector(stateSelector, state => state.entities)
 export const loadingSelector = createSelector(stateSelector, state => state.loading)
 export const loadedSelector = createSelector(stateSelector, state => state.loaded)
-export const eventListSelector = createSelector(entitiesSelector, entities => entities.toArray())
+export const eventListSelector = createSelector(entitiesSelector, entities => entities.valueSeq().toArray())
 
 /**
  * Action Creators

@@ -1,5 +1,5 @@
 import {appName} from '../config'
-import {Record, List} from 'immutable'
+import {Record, OrderedMap} from 'immutable'
 import {createSelector} from 'reselect'
 import {put, call, all, takeEvery} from 'redux-saga/effects'
 import {reset} from 'redux-form'
@@ -17,7 +17,7 @@ export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
  * Reducer
  * */
 const ReducerState = Record({
-    entities: new List([])
+    entities: new OrderedMap({})
 })
 
 const PersonRecord = Record({
@@ -32,7 +32,7 @@ export default function reducer(state = new ReducerState(), action) {
 
     switch (type) {
         case ADD_PERSON_SUCCESS:
-            return state.update('entities', entities => entities.push(new PersonRecord(payload)))
+            return state.setIn(['entities', payload.uid],new PersonRecord(payload))
 
         default:
             return state
@@ -44,7 +44,7 @@ export default function reducer(state = new ReducerState(), action) {
  * */
 export const stateSelector = state => state[moduleName]
 export const entitiesSelector = createSelector(stateSelector, state => state.entities)
-export const peopleListSelector = createSelector(entitiesSelector, entities => entities.toArray())
+export const peopleListSelector = createSelector(entitiesSelector, entities => entities.valueSeq().toArray())
 
 /**
  * Action Creators
@@ -64,11 +64,11 @@ export function addPerson(person) {
 export const addPersonSaga = function * (action) {
     const { person } = action.payload
 
-    const id = yield call(generateId)
+    const uid = yield call(generateId)
 
     yield put({
         type: ADD_PERSON_SUCCESS,
-        payload: {id, ...person}
+        payload: {uid, ...person}
     })
 
     yield put(reset('person'))

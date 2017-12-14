@@ -20,11 +20,11 @@ describe('people saga', () => {
 
         expect(generator.next().value).toEqual(call(generateId))
 
-        const id = generateId()
+        const uid = generateId()
 
-        expect(generator.next(id).value).toEqual(put({
+        expect(generator.next(uid).value).toEqual(put({
             type: ADD_PERSON_SUCCESS,
-            payload: {id, ...person}
+            payload: {uid, ...person}
         }))
 
         expect(generator.next().value).toEqual(put(reset('person')))
