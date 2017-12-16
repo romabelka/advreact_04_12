@@ -3,6 +3,7 @@ import {appName} from '../config'
 import {createSelector} from 'reselect'
 import {Record} from 'immutable'
 import firebase from 'firebase'
+import {replace} from 'react-router-redux'
 
 /**
  * Constants
@@ -107,13 +108,7 @@ export const signUpSaga = function * () {
 
         try {
             const auth = firebase.auth()
-            const user = yield call([auth, auth.createUserWithEmailAndPassword], email, password)
-
-            yield put({
-                type: SIGN_UP_SUCCESS,
-                payload: {user}
-            })
-
+            yield call([auth, auth.createUserWithEmailAndPassword], email, password)
         } catch (error) {
             yield put({
                 type: SIGN_UP_ERROR,
@@ -132,13 +127,7 @@ export const signInSaga = function * (action) {
 
     try {
         const auth = firebase.auth()
-        const user = yield apply(auth, auth.signInWithEmailAndPassword, [email, password])
-
-        yield put({
-            type: SIGN_IN_SUCCESS,
-            payload: { user }
-        })
-
+        yield apply(auth, auth.signInWithEmailAndPassword, [email, password])
     } catch (error) {
         yield put({
             type: SIGN_IN_ERROR,
@@ -147,9 +136,19 @@ export const signInSaga = function * (action) {
     }
 }
 
+export function * watchStatusChangeSaga() {
+    while (true) {
+        yield take(SIGN_IN_SUCCESS)
+
+        yield (put(replace('/events')))
+    }
+}
+
+
 export const saga = function * () {
     yield all([
         takeEvery(SIGN_IN_REQUEST, signInSaga),
-        signUpSaga()
+        signUpSaga(),
+        watchStatusChangeSaga()
     ])
 }
