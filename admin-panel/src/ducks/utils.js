@@ -1,4 +1,4 @@
-import {OrderedMap} from 'immutable'
+import {OrderedMap, List} from 'immutable'
 
 export function generateId() {
     return Date.now()

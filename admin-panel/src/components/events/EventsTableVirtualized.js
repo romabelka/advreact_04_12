@@ -16,6 +16,7 @@ export class EventsTableVirtualized extends Component {
 
     render() {
         if (this.props.loading) return <Loader />
+
         return (
             <Table
                 height={500}
