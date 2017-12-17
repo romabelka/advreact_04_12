@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {peopleListSelector} from '../../ducks/people'
+import {peopleListSelector, fetchAllPeople, loadingSelector} from '../../ducks/people'
 import {List} from 'react-virtualized'
+import Loader from '../common/Loader'
 import 'react-virtualized/styles.css'
 
 class PeopleList extends Component {
@@ -9,10 +10,18 @@ class PeopleList extends Component {
 
     };
 
+    componentDidMount() {
+        this.props.fetchAllPeople()
+    }
+
     render() {
+        const {people, loading} = this.props
+
+        if (loading) return <Loader />
+
         return <List
             rowRenderer={this.rowRenderer}
-            rowCount={this.props.people.length}
+            rowCount={people.length}
             rowHeight={100}
             height={400}
             width={400}
@@ -40,5 +49,6 @@ class PeopleList extends Component {
 }
 
 export default connect((state) => ({
-    people: peopleListSelector(state)
-}))(PeopleList)
+    people: peopleListSelector(state),
+    loading: loadingSelector(state),
+}), {fetchAllPeople})(PeopleList)

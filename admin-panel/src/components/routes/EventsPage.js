@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EventsTableVirtualized from '../events/EventsTableVirtualized'
+import EventsInfiniteLoaderVirtualized from '../events/EventsInfiniteLoaderVirtualized'
 
 class EventsPage extends Component {
     static propTypes = {
@@ -9,7 +10,7 @@ class EventsPage extends Component {
     render() {
         return (
             <div>
-                <EventsTableVirtualized />
+                <EventsInfiniteLoaderVirtualized />
             </div>
         )
     }
