@@ -1,4 +1,4 @@
-import {all, takeEvery, put, call} from 'redux-saga/effects'
+import {all, takeEvery, put, call, take, select} from 'redux-saga/effects'
 import {appName} from '../config'
 import {Record, OrderedSet, OrderedMap} from 'immutable'
 import firebase from 'firebase'
@@ -14,6 +14,10 @@ const prefix = `${appName}/${moduleName}`
 export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`
 export const FETCH_ALL_START = `${prefix}/FETCH_ALL_START`
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`
+
+export const FETCH_LAZY_REQUEST = `${prefix}/FETCH_LAZY_REQUEST`
+export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`
+export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 
 export const SELECT = `${prefix}/SELECT`
 
@@ -42,6 +46,7 @@ export default function reducer(state = new ReducerRecord(), action) {
 
     switch (type) {
         case FETCH_ALL_START:
+        case FETCH_LAZY_START:
             return state.set('loading', true)
 
         case FETCH_ALL_SUCCESS:
@@ -49,6 +54,12 @@ export default function reducer(state = new ReducerRecord(), action) {
                 .set('loading', false)
                 .set('loaded', true)
                 .set('entities', fbToEntities(payload, EventRecord))
+
+        case FETCH_LAZY_SUCCESS:
+            return state
+                .set('loading', false)
+                .mergeIn(['entities'], fbToEntities(payload, EventRecord))
+                .set('loaded', Object.keys(payload).length < 10)
 
         case SELECT:
             return state.update('selected', selected => selected.has(payload.uid)
@@ -88,6 +99,12 @@ export function selectEvent(uid) {
     }
 }
 
+export function fetchLazy() {
+    return {
+        type: FETCH_LAZY_REQUEST
+    }
+}
+
 /**
  * Sagas
  * */
@@ -109,8 +126,38 @@ export function* fetchAllSaga() {
     })
 }
 
+export const fetchLazySaga = function * () {
+    while (true) {
+        yield take(FETCH_LAZY_REQUEST)
+
+        const state = yield select(stateSelector)
+
+        if (state.loading || state.loaded) continue
+//        if (state.loaded) return
+
+        yield put({
+            type: FETCH_LAZY_START
+        })
+
+        const lastEvent = state.entities.last()
+
+        const ref = firebase.database().ref('events')
+            .orderByKey()
+            .limitToFirst(10)
+            .startAt(lastEvent ? lastEvent.uid : '')
+
+        const data = yield call([ref, ref.once], 'value')
+
+        yield put({
+            type: FETCH_LAZY_SUCCESS,
+            payload: data.val()
+        })
+    }
+}
+
 export function* saga() {
     yield all([
-        takeEvery(FETCH_ALL_REQUEST, fetchAllSaga)
+        takeEvery(FETCH_ALL_REQUEST, fetchAllSaga),
+        fetchLazySaga()
     ])
 }

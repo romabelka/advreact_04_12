@@ -3,7 +3,7 @@ import {Record, OrderedMap} from 'immutable'
 import {createSelector} from 'reselect'
 import {put, call, all, takeEvery} from 'redux-saga/effects'
 import {reset} from 'redux-form'
-import {generateId} from './utils'
+import firebase from 'firebase'
 
 /**
  * Constants
@@ -11,6 +11,7 @@ import {generateId} from './utils'
 export const moduleName = 'people'
 const prefix = `${appName}/${moduleName}`
 export const ADD_PERSON = `${prefix}/ADD_PERSON`
+export const ADD_PERSON_START = `${prefix}/ADD_PERSON_START`
 export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
 
 /**
@@ -61,14 +62,20 @@ export function addPerson(person) {
  * Sagas
  */
 
-export const addPersonSaga = function * (action) {
-    const { person } = action.payload
+export function * addPersonSaga(action) {
 
-    const uid = yield call(generateId)
+    yield put({
+        type: ADD_PERSON_START,
+        payload: { ...action.payload.person }
+    })
+
+    const peopleRef = firebase.database().ref('people')
+
+    const { key } = yield call([peopleRef, peopleRef.push], action.payload.person)
 
     yield put({
         type: ADD_PERSON_SUCCESS,
-        payload: {uid, ...person}
+        payload: { uid: key , ...action.payload.person }
     })
 
     yield put(reset('person'))
