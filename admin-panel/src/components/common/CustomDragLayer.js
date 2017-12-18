@@ -17,11 +17,12 @@ class CustomDragLayer extends Component {
     getItem() {
         const {offset, item} = this.props
 
-        if (!item.DragPreview) return null
+        if (!item.DragPreview || !offset) return null
 
         const style = {
             transform: `translate(${offset.x}px,${offset.y}px)`
         }
+
         return <div style={style}>
             <item.DragPreview {...item} />
         </div>

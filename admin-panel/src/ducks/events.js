@@ -20,6 +20,7 @@ export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`
 export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 
 export const SELECT = `${prefix}/SELECT`
+export const ADD_PERSON_TO_EVENT = `${prefix}/ADD_PERSON_TO_EVENT`
 
 /**
  * Reducer
@@ -106,6 +107,13 @@ export function selectEvent(uid) {
 export function fetchLazy() {
     return {
         type: FETCH_LAZY_REQUEST
+    }
+}
+
+export function addPersonToEvent(personId, eventId) {
+    return {
+        type: ADD_PERSON_TO_EVENT,
+        payload: { personId, eventId }
     }
 }
 
