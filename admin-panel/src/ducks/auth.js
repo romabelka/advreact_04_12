@@ -140,7 +140,7 @@ export function * watchStatusChangeSaga() {
     while (true) {
         yield take(SIGN_IN_SUCCESS)
 
-        yield (put(replace('/events')))
+//        yield (put(replace('/events')))
     }
 }
 

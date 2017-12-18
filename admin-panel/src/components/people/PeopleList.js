@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import {peopleListSelector} from '../../ducks/people'
+import {peopleListSelector, fetchAllPeople} from '../../ducks/people'
 import {List} from 'react-virtualized'
 import 'react-virtualized/styles.css'
 
@@ -8,6 +8,10 @@ class PeopleList extends Component {
     static propTypes = {
 
     };
+
+    componentDidMount() {
+        this.props.fetchAllPeople()
+    }
 
     render() {
         return <List
@@ -33,4 +37,4 @@ class PeopleList extends Component {
 
 export default connect((state) => ({
     people: peopleListSelector(state)
-}))(PeopleList)
+}), { fetchAllPeople })(PeopleList)

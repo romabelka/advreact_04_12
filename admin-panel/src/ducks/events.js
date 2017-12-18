@@ -81,6 +81,10 @@ export const entitiesSelector = createSelector(stateSelector, state => state.ent
 export const loadingSelector = createSelector(stateSelector, state => state.loading)
 export const loadedSelector = createSelector(stateSelector, state => state.loaded)
 export const eventListSelector = createSelector(entitiesSelector, entities => entities.valueSeq().toArray())
+export const selectionSelector = createSelector(stateSelector, state => state.selected)
+export const selectedEvents = createSelector(eventListSelector, selectionSelector, (events, selected) =>
+    events.filter(event => selected.has(event.uid))
+)
 
 /**
  * Action Creators
