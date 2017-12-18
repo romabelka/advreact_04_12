@@ -1,16 +1,12 @@
 import {createStore, applyMiddleware} from 'redux'
 import logger from 'redux-logger'
 import {routerMiddleware} from 'react-router-redux'
-import createSagaMiddleware from 'redux-saga'
+import thunk from 'redux-thunk'
 import reducer from './reducer'
 import history from '../history'
-import saga from './saga'
+import {randomId} from './middlewares'
 
-const sagaMiddleware = createSagaMiddleware()
-
-const store = createStore(reducer, applyMiddleware(sagaMiddleware, routerMiddleware(history), logger))
-
-sagaMiddleware.run(saga)
+const store = createStore(reducer, applyMiddleware(thunk, routerMiddleware(history), randomId, logger))
 
 //dev only
 window.store = store
