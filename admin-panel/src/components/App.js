@@ -5,6 +5,7 @@ import AdminPage from './routes/Admin'
 import ProtectedRoute from './common/ProtectedRoute'
 import PersonPage from './routes/PersonPage'
 import EventsPage from './routes/EventsPage'
+import CustomDragLayer from './common/CustomDragLayer'
 
 class App extends Component {
     static propTypes = {
@@ -14,7 +15,6 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1>Hello world</h1>
                 <ul>
                     <li><NavLink to = '/admin' activeStyle = {{color: 'red'}}>admin</NavLink></li>
                     <li><NavLink to = '/people' activeStyle = {{color: 'red'}}>people</NavLink></li>
@@ -24,6 +24,7 @@ class App extends Component {
                 <ProtectedRoute path = '/people' component={PersonPage}/>
                 <ProtectedRoute path = '/events' component={EventsPage}/>
                 <Route path = '/auth' component = {AuthPage}/>
+                <CustomDragLayer />
             </div>
         )
     }
