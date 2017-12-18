@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {peopleListSelector, fetchAllPeople} from '../../ducks/people'
 import {List} from 'react-virtualized'
+import PersonCard from './PersonCard'
 import 'react-virtualized/styles.css'
 
 class PeopleList extends Component {
@@ -26,12 +27,7 @@ class PeopleList extends Component {
 
     rowRenderer = ({ style, index, key }) => {
         const person = this.props.people[index]
-        return (
-            <div style={style} key={key}>
-                <h1>{person.firstName} <b>{person.lastName}</b></h1>
-                <h3>{person.email}</h3>
-            </div>
-        )
+        return <PersonCard person = {person} key = {key} style = {style} />
     }
 }
 

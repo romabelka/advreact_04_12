@@ -26,7 +26,7 @@ const ReducerState = Record({
 })
 
 const PersonRecord = Record({
-    id: null,
+    uid: null,
     firstName: null,
     lastName: null,
     email: null

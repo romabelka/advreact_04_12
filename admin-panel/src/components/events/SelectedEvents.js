@@ -12,7 +12,7 @@ class SelectedEvents extends Component {
         return (
             <div>
                 <h2>Selected Events</h2>
-                {this.props.events.map(event => <SelectedEventCard event = {event}/>)}
+                {this.props.events.map(event => <SelectedEventCard event = {event} key = {event.uid}/>)}
             </div>
         )
     }
