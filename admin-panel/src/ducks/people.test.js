@@ -26,7 +26,6 @@ describe('people saga', () => {
 
         expect(generator.next().value).toEqual(call([peopleRef, peopleRef.push], action.payload.person))
 
-//        const { key } = yield call([peopleRef, peopleRef.push], action.payload.person)
         const key = '1234'
 
         expect(generator.next({ key }).value).toEqual(put({
@@ -37,21 +36,6 @@ describe('people saga', () => {
         expect(generator.next().value).toEqual(put(reset('person')))
 
         expect(generator.next().done).toBe(true)
-
-        /*
-                expect(generator.next().value).toEqual(call(generateId))
-
-                const uid = generateId()
-
-                expect(generator.next(uid).value).toEqual(put({
-                    type: ADD_PERSON_SUCCESS,
-                    payload: {uid, ...person}
-                }))
-
-                expect(generator.next().value).toEqual(put(reset('person')))
-
-                expect(generator.next().done).toBe(true)
-        */
 
     });
 });

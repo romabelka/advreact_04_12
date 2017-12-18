@@ -29,14 +29,6 @@ class PeopleList extends Component {
             </div>
         )
     }
-
-    getRow = (person) => (
-        <tr key = {person.id}>
-            <td>{person.firstName}</td>
-            <td>{person.lastName}</td>
-            <td>{person.email}</td>
-        </tr>
-    )
 }
 
 export default connect((state) => ({
