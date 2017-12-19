@@ -1,14 +1,36 @@
-import React from 'react'
+import React, { Component } from 'react'
+import {connect} from 'react-redux'
+import {peopleListSelector, fetchAllPeople} from '../../ducks/people'
+import {List} from 'react-virtualized'
+import PersonCard from './PersonCard'
+import 'react-virtualized/styles.css'
 
-export default ({list}) =>
-      <div>
-        <h2>People</h2>
-        <div>
-          <div>Id. Email Имя Фамилия</div>
-          {list.map((p, idx) => (
-            <div key={p.id}>
-              {idx}. {p.email} {p.firstName} {p.lastName}
-            </div>
-          ))}
-        </div>
-      </div>
+class PeopleList extends Component {
+    static propTypes = {
+
+    };
+
+    componentDidMount() {
+        this.props.fetchAllPeople()
+    }
+
+    render() {
+        return <List
+            rowRenderer={this.rowRenderer}
+            rowCount={this.props.people.length}
+            rowHeight={100}
+            height={400}
+            width={400}
+        />
+
+    }
+
+    rowRenderer = ({ style, index, key }) => {
+        const person = this.props.people[index]
+        return <PersonCard person = {person} key = {key} style = {style} />
+    }
+}
+
+export default connect((state) => ({
+    people: peopleListSelector(state)
+}), { fetchAllPeople })(PeopleList)

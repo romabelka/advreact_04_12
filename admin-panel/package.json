@@ -9,11 +9,14 @@
     "immutable": "^3.8.2",
     "logger": "^0.0.1",
     "react": "^16.2.0",
+    "react-dnd": "^2.5.4",
+    "react-dnd-html5-backend": "^2.5.4",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts": "1.0.17",
+    "react-virtualized": "^9.13.0",
     "redux": "^3.7.2",
     "redux-form": "^7.2.0",
     "redux-logger": "^3.0.6",
@@ -27,5 +30,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0"
   }
 }
