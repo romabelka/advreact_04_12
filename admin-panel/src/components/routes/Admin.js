@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import VirtualizedLazyTable from '../events/VirtualizedLazyTable'
 import PeopleList from '../people/PeopleList'
 import SelectedEvents from '../events/SelectedEvents'
+import Bucket from '../events/Bucket';
 
 class Admin extends Component {
     static propTypes = {
@@ -14,6 +15,7 @@ class Admin extends Component {
                 <h2>Admin Page</h2>
                 <SelectedEvents />
                 <PeopleList />
+                <Bucket/>
                 <VirtualizedLazyTable />
             </div>
         )

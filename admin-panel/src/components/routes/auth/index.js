@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {Route, NavLink} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {signIn, signUp} from '../../../ducks/auth'
+
+import {signIn, signUp, errorSelector, loadingSelector} from '../../../ducks/auth'
 import SignInForm from '../../auth/SignInForm'
 import SignUpForm from '../../auth/SignUpForm'
 
@@ -11,6 +12,7 @@ class Auth extends Component {
     };
 
     render() {
+        const {loading, error} = this.props;
         return (
             <div>
                 <h2>Auth page</h2>
@@ -20,6 +22,12 @@ class Auth extends Component {
                 </ul>
                 <Route path='/auth/sign-in' render={() => <SignInForm onSubmit={this.onSignIn}/>} />
                 <Route path='/auth/sign-up' render={() => <SignUpForm onSubmit={this.onSignUp}/>} />
+                {error !== null &&
+                    <h4 style={{color: 'red'}}>{error}</h4>
+                }
+                {loading &&
+                <div>Loading...</div>
+                }
             </div>
         )
     }
@@ -29,4 +37,7 @@ class Auth extends Component {
 
 }
 
-export default connect(null, { signIn, signUp })(Auth)
+export default connect(state => ({
+    error: errorSelector(state),
+    loading: loadingSelector(state)
+}), { signIn, signUp })(Auth)
