@@ -22,6 +22,8 @@ export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 export const SELECT = `${prefix}/SELECT`
 export const ADD_PERSON_TO_EVENT = `${prefix}/ADD_PERSON_TO_EVENT`
 
+export const REMOVE = `${prefix}/REMOVE`
+
 /**
  * Reducer
  * */
@@ -67,6 +69,9 @@ export default function reducer(state = new ReducerRecord(), action) {
                 ? selected.remove(payload.uid)
                 : selected.add(payload.uid)
             )
+        case REMOVE:
+            return state.update('entities', entities =>  entities.delete(payload.eventId))
+
 
         default:
             return state
@@ -86,6 +91,8 @@ export const selectionSelector = createSelector(stateSelector, state => state.se
 export const selectedEvents = createSelector(eventListSelector, selectionSelector, (events, selected) =>
     events.filter(event => selected.has(event.uid))
 )
+export const idSelector = (_, props) => props.id
+export const eventSelector = createSelector(entitiesSelector, idSelector, (entities, id) => entities.get(id) !== undefined?entities.get(id):EventRecord)
 
 /**
  * Action Creators
@@ -117,6 +124,12 @@ export function addPersonToEvent(personId, eventId) {
     }
 }
 
+export function removeEvent(eventId){
+    return {
+        type: REMOVE,
+        payload:{eventId}
+    }
+}
 /**
  * Sagas
  * */
