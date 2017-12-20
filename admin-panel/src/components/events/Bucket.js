@@ -21,7 +21,7 @@ class Bucket extends Component {
     return connectDropTarget(
       <div>
       <h3>Bucket:</h3>
-      <div style={{...dndStyle}}></div>
+      <div style={dndStyle}></div>
       </div>
     )
   }
