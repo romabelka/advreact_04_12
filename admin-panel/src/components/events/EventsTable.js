@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {fetchAllEvents, selectEvent, eventListSelector, loadedSelector, loadingSelector} from '../../ducks/events'
 import Loader from '../common/Loader'
-import EventsTableRow from './EventsTableRow'
 
 export class EventsTable extends Component {
     static propTypes = {
@@ -27,7 +26,11 @@ export class EventsTable extends Component {
     getRows = () => this.props.events.map(this.getRow)
 
     getRow = (event) => (
-        <EventsTableRow event={event} selectEvent={this.props.selectEvent}/>
+        <tr key = {event.uid} className="test__event_table_row" onClick = {() => this.props.selectEvent(event.uid)}>
+            <td>{event.title}</td>
+            <td>{event.when}</td>
+            <td>{event.where}</td>
+        </tr>
     )
 }
 
