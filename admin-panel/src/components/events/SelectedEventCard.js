@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {DropTarget} from 'react-dnd'
+import {addEventToPerson, peopleListSelector} from '../../ducks/people'
 import {connect} from 'react-redux'
-import {addPersonToEvent} from '../../ducks/events'
 
 class SelectedEventCard extends Component {
     static propTypes = {
@@ -9,7 +9,7 @@ class SelectedEventCard extends Component {
     };
 
     render() {
-        const {event, connectDropTarget, canDrop, hovered} = this.props
+        const {event, people, connectDropTarget, canDrop, hovered} = this.props
         const dndStyle = {
             border: `1px solid ${canDrop 
                 ? hovered 
@@ -17,11 +17,13 @@ class SelectedEventCard extends Component {
                     : 'red'
                 : 'black'}`
         }
+        const peopleList = people.map(person => person.email).join(', ')
+
         return connectDropTarget(
             <div style = {dndStyle}>
                 <h2>{event.title}</h2>
-                <p>{event.where}</p>
-                <p>{event.when}</p>
+                <h3>{event.when}</h3>
+                <h3>{peopleList}</h3>
             </div>
         )
     }
@@ -29,13 +31,10 @@ class SelectedEventCard extends Component {
 
 const spec = {
     drop(props, monitor) {
-        props.addPersonToEvent(monitor.getItem().id, props.event.uid)
-    },
-/*
-    canDrop() {
-        return false
+        const item = monitor.getItem()
+        const {event, addEventToPerson} = props
+        addEventToPerson(event.uid, item.id)
     }
-*/
 }
 
 const collect = (connect, monitor) => ({
@@ -44,6 +43,6 @@ const collect = (connect, monitor) => ({
     hovered: monitor.isOver()
 })
 
-export default connect(
-    null, { addPersonToEvent }
-)(DropTarget(['person'], spec, collect)(SelectedEventCard))
+export default connect((state, props) => ({
+    people: peopleListSelector(state).filter(person => person.events.includes(props.event.uid))
+}), { addEventToPerson })(DropTarget(['person'], spec, collect)(SelectedEventCard))

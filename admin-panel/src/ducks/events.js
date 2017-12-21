@@ -20,7 +20,9 @@ export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`
 export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 
 export const SELECT = `${prefix}/SELECT`
-export const ADD_PERSON_TO_EVENT = `${prefix}/ADD_PERSON_TO_EVENT`
+
+export const DELETE_EVENT_REQUEST = `${prefix}/DELETE_EVENT_REQUEST`
+export const DELETE_EVENT_SUCCESS = `${prefix}/DELETE_EVENT_SUCCESS`
 
 /**
  * Reducer
@@ -68,6 +70,15 @@ export default function reducer(state = new ReducerRecord(), action) {
                 : selected.add(payload.uid)
             )
 
+        case DELETE_EVENT_REQUEST:
+            return state.set('loading', true)
+
+        case DELETE_EVENT_SUCCESS:
+            return state
+                .set('loading', false)
+                .deleteIn(['entities', payload.uid])
+                .update('selected', selected => selected.remove(payload.uid))
+
         default:
             return state
     }
@@ -86,6 +97,8 @@ export const selectionSelector = createSelector(stateSelector, state => state.se
 export const selectedEvents = createSelector(eventListSelector, selectionSelector, (events, selected) =>
     events.filter(event => selected.has(event.uid))
 )
+export const idSelector = (state, props) => props.uid
+export const eventSelector = createSelector(entitiesSelector, idSelector, (entities, id) => entities.get(id))
 
 /**
  * Action Creators
@@ -110,12 +123,13 @@ export function fetchLazy() {
     }
 }
 
-export function addPersonToEvent(personId, eventId) {
+export function deleteEvent(uid) {
     return {
-        type: ADD_PERSON_TO_EVENT,
-        payload: { personId, eventId }
+        type: DELETE_EVENT_REQUEST,
+        payload: {uid}
     }
 }
+
 
 /**
  * Sagas
@@ -167,9 +181,26 @@ export const fetchLazySaga = function * () {
     }
 }
 
+export const deleteEventSaga = function * (action) {
+    const {payload} = action
+    const ref = firebase.database().ref(`events/${payload.uid}`)
+
+    try {
+        yield call([ref, ref.remove])
+
+        yield put({
+            type: DELETE_EVENT_SUCCESS,
+            payload
+        })
+    } catch (_) {
+
+    }
+}
+
 export function* saga() {
     yield all([
         takeEvery(FETCH_ALL_REQUEST, fetchAllSaga),
-        fetchLazySaga()
+        fetchLazySaga(),
+        takeEvery(DELETE_EVENT_REQUEST, deleteEventSaga)
     ])
 }
