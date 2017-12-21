@@ -1,8 +1,8 @@
 import {appName} from '../config'
 import {Record, OrderedMap} from 'immutable'
 import {createSelector} from 'reselect'
-import {put, call, all, takeEvery, select, fork, spawn, cancel, cancelled, race} from 'redux-saga/effects'
-import {delay} from 'redux-saga'
+import {put, call, all, takeEvery, select, fork, spawn, cancel, cancelled, race, take} from 'redux-saga/effects'
+import {delay, eventChannel} from 'redux-saga'
 import {reset} from 'redux-form'
 import firebase from 'firebase'
 import {fbToEntities} from './utils'
@@ -41,8 +41,10 @@ export default function reducer(state = new ReducerState(), action) {
     const {type, payload} = action
 
     switch (type) {
+/*
         case ADD_PERSON_SUCCESS:
             return state.setIn(['entities', payload.uid],new PersonRecord(payload))
+*/
 
         case FETCH_ALL_SUCCESS:
             return state.set('entities', fbToEntities(payload, PersonRecord))
@@ -174,8 +176,29 @@ export function* cancellableSync() {
 */
 }
 
+const createSocket = () => eventChannel(emit => {
+    const callback = data => emit({ data })
+    firebase.database().ref('people').on('value', callback)
+
+    return () => firebase.database().ref('people').off('value', callback)
+})
+
+export function * syncRealTime() {
+    const chanel = yield call(createSocket)
+
+    while (true) {
+        const { data } = yield take(chanel)
+
+        yield put({
+            type: FETCH_ALL_SUCCESS,
+            payload: data.val()
+        })
+    }
+}
+
+
 export const saga = function * () {
-    yield spawn(cancellableSync)
+    yield spawn(syncRealTime)
 
     yield all([
         takeEvery(ADD_PERSON, addPersonSaga),
