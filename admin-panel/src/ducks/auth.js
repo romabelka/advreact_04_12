@@ -1,4 +1,5 @@
 import {all, takeEvery, take, put, apply, call} from 'redux-saga/effects'
+import {eventChannel} from 'redux-saga'
 import {appName} from '../config'
 import {createSelector} from 'reselect'
 import {Record} from 'immutable'
@@ -20,6 +21,8 @@ export const SIGN_UP_REQUEST = `${prefix}/SIGN_UP_REQUEST`
 export const SIGN_UP_START = `${prefix}/SIGN_UP_START`
 export const SIGN_UP_SUCCESS = `${prefix}/SIGN_UP_SUCCESS`
 export const SIGN_UP_ERROR = `${prefix}/SIGN_UP_ERROR`
+
+export const SIGN_OUT = `${prefix}/SIGN_OUT`
 
 /**
  * Reducer
@@ -51,6 +54,10 @@ export default function reducer(state = new ReducerRecord(), action) {
             return state
                 .set('loading', false)
                 .set('error', payload.error.message)
+
+        case SIGN_OUT:
+            return state
+                .set('user', null)
 
         default:
             return state
@@ -85,13 +92,18 @@ export function signIn(email, password) {
     }
 }
 
+export function signOut() {
+  return {
+    type: SIGN_OUT
+  };
+}
 
-firebase.auth().onAuthStateChanged(user => {
-    if (user) window.store.dispatch({
-        type: SIGN_IN_SUCCESS,
-        payload: { user }
-    })
-})
+// firebase.auth().onAuthStateChanged(user => {
+//     if (user) window.store.dispatch({
+//         type: SIGN_IN_SUCCESS,
+//         payload: { user }
+//     })
+// })
 
 /**
  * Sagas
@@ -136,19 +148,46 @@ export const signInSaga = function * (action) {
     }
 }
 
-export function * watchStatusChangeSaga() {
-    while (true) {
-        yield take(SIGN_IN_SUCCESS)
+const createSocket = () => eventChannel(emit => {
+  const callback = user => emit(user || 'null')
 
-//        yield (put(replace('/events')))
+  return firebase.auth().onAuthStateChanged(callback)
+})
+
+export function * watchStatusChangeSaga() {
+  const chanel = yield call(createSocket)
+
+  while (true) {
+    const user = yield take(chanel)
+
+    if (user !== 'null') {
+      yield put({
+        type: SIGN_IN_SUCCESS,
+        payload: { user }
+      })
+      
+      yield put(replace('/events'))
+    } else {
+      yield put(replace('/auth/sign-in'))
     }
+  }
 }
 
+export function * singOutSaga() {
+  const auth = firebase.auth();
+
+  try {
+    yield call([auth, auth.signOut])
+  } catch (error) {
+    console.log('SignOut Error -->', error)
+  }
+}
 
 export const saga = function * () {
     yield all([
         takeEvery(SIGN_IN_REQUEST, signInSaga),
         signUpSaga(),
+        takeEvery(SIGN_OUT, singOutSaga),
         watchStatusChangeSaga()
     ])
 }

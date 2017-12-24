@@ -41,10 +41,8 @@ export default function reducer(state = new ReducerState(), action) {
     const {type, payload} = action
 
     switch (type) {
-/*
         case ADD_PERSON_SUCCESS:
             return state.setIn(['entities', payload.uid],new PersonRecord(payload))
-*/
 
         case FETCH_ALL_SUCCESS:
             return state.set('entities', fbToEntities(payload, PersonRecord))
