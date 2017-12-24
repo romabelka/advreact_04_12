@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {DragSource} from 'react-dnd'
+import {TransitionMotion, spring} from 'react-motion'
 import {getEmptyImage} from 'react-dnd-html5-backend'
 import PersonDragPreview from './PersonDragPreview'
 
@@ -18,12 +19,28 @@ class PersonCard extends Component {
             opacity: isDragging ? 0.2 : 1
         }
         return (
-            <div style={{...dragStyles, ...style}}>
-                {connectDragSource(<h1>{person.firstName} <b>{person.lastName}</b></h1>)}
-                <h3>{person.email}</h3>
-            </div>
+            <TransitionMotion
+                willEnter={this.willEnter}
+                styles={[{
+                  key: this.props.person.uid,
+                  style: {
+                      opacity: spring(1, { stiffness: 60, damping: 40 })
+                  }
+                }]}
+            >
+                {interpolatedData => (
+                    <div style={{...dragStyles, ...style, ...interpolatedData[0].style}} key={interpolatedData[0].key}>
+                        {connectDragSource(<h1>{person.firstName} <b>{person.lastName}</b></h1>)}
+                        <h3>{person.email}</h3>
+                    </div>
+                )}
+            </TransitionMotion>
         )
     }
+
+    willEnter = () => ({
+        opacity: 0
+    })
 }
 
 const spec = {

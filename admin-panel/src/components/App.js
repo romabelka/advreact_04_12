@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {Route, NavLink} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { signOut } from '../ducks/auth'
 import AuthPage from './routes/auth'
 import AdminPage from './routes/Admin'
 import ProtectedRoute from './common/ProtectedRoute'
@@ -15,6 +17,7 @@ class App extends Component {
     render() {
         return (
             <div>
+                <button onClick={this.props.signOut}>SignOut</button>
                 <ul>
                     <li><NavLink to = '/admin' activeStyle = {{color: 'red'}}>admin</NavLink></li>
                     <li><NavLink to = '/people' activeStyle = {{color: 'red'}}>people</NavLink></li>
@@ -30,4 +33,4 @@ class App extends Component {
     }
 }
 
-export default App
+export default connect(null, { signOut }, null, { pure: false })(App)
