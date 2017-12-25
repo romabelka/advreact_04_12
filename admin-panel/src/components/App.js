@@ -33,4 +33,4 @@ class App extends Component {
     }
 }
 
-export default connect(null, { signOut })(App)
+export default connect(null, { signOut }, null, { pure: false })(App)
