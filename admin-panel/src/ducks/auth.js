@@ -1,4 +1,5 @@
 import {all, takeEvery, take, put, apply, call} from 'redux-saga/effects'
+import {eventChannel} from 'redux-saga'
 import {appName} from '../config'
 import {createSelector} from 'reselect'
 import {Record} from 'immutable'
@@ -15,6 +16,9 @@ export const SIGN_IN_REQUEST = `${prefix}/SIGN_IN_REQUEST`
 export const SIGN_IN_START = `${prefix}/SIGN_IN_START`
 export const SIGN_IN_SUCCESS = `${prefix}/SIGN_IN_SUCCESS`
 export const SIGN_IN_ERROR = `${prefix}/SIGN_IN_ERROR`
+
+export const SIGN_OUT_REQUEST = `${prefix}/SIGN_OUT_REQUEST`
+export const SIGN_OUT_SUCCESS = `${prefix}/SIGN_OUT_SUCCESS`
 
 export const SIGN_UP_REQUEST = `${prefix}/SIGN_UP_REQUEST`
 export const SIGN_UP_START = `${prefix}/SIGN_UP_START`
@@ -42,6 +46,7 @@ export default function reducer(state = new ReducerRecord(), action) {
 
         case SIGN_IN_SUCCESS:
         case SIGN_UP_SUCCESS:
+        case SIGN_OUT_SUCCESS:
             return state
                 .set('loading', false)
                 .set('user', payload.user)
@@ -85,13 +90,11 @@ export function signIn(email, password) {
     }
 }
 
-
-firebase.auth().onAuthStateChanged(user => {
-    if (user) window.store.dispatch({
-        type: SIGN_IN_SUCCESS,
-        payload: { user }
-    })
-})
+export function signOut() {
+    return {
+        type: SIGN_OUT_REQUEST
+    }
+}
 
 /**
  * Sagas
@@ -136,11 +139,31 @@ export const signInSaga = function * (action) {
     }
 }
 
-export function * watchStatusChangeSaga() {
-    while (true) {
-        yield take(SIGN_IN_SUCCESS)
+export const signOutSaga = function * () {
+    const auth = firebase.auth()
+    yield apply(auth, auth.signOut)
+}
 
-//        yield (put(replace('/events')))
+const createAuthChannel = () => eventChannel(emit => firebase.auth().onAuthStateChanged(user => emit({ user })))
+
+export const watchStatusChangeSaga = function * () {
+    const chan = yield call(createAuthChannel)
+    while (true) {
+        const { user } = yield take(chan)
+
+        if (user) {
+            yield put({
+                type: SIGN_IN_SUCCESS,
+                payload: { user }
+            })
+
+        } else {
+            yield put({
+                type: SIGN_OUT_SUCCESS,
+                payload: { user }
+            })
+            yield put(replace('/auth/sign-in'))
+        }
     }
 }
 
@@ -148,6 +171,7 @@ export function * watchStatusChangeSaga() {
 export const saga = function * () {
     yield all([
         takeEvery(SIGN_IN_REQUEST, signInSaga),
+        takeEvery(SIGN_OUT_REQUEST, signOutSaga),
         signUpSaga(),
         watchStatusChangeSaga()
     ])

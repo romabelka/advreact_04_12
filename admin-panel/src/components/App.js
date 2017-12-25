@@ -6,6 +6,8 @@ import ProtectedRoute from './common/ProtectedRoute'
 import PersonPage from './routes/PersonPage'
 import EventsPage from './routes/EventsPage'
 import CustomDragLayer from './common/CustomDragLayer'
+import {connect} from 'react-redux'
+import {signOut} from '../ducks/auth'
 
 class App extends Component {
     static propTypes = {
@@ -15,6 +17,7 @@ class App extends Component {
     render() {
         return (
             <div>
+                <button onClick = {this.props.signOut}>Sign Out</button>
                 <ul>
                     <li><NavLink to = '/admin' activeStyle = {{color: 'red'}}>admin</NavLink></li>
                     <li><NavLink to = '/people' activeStyle = {{color: 'red'}}>people</NavLink></li>
@@ -30,4 +33,4 @@ class App extends Component {
     }
 }
 
-export default App
+export default connect(null, { signOut })(App)
