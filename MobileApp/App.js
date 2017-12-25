@@ -1,13 +1,15 @@
 import React from 'react'
 import { Text, View } from 'react-native'
-import SignIn from './src/SignIn'
+import SignIn from './src/components/SignIn'
 //import HelloWorld from './src/HelloWorld'
+import EventScreen from './src/components/EventScreen'
+import {eventList} from './src/fixtures'
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <SignIn />
+          <EventScreen event = {eventList[0]} />
       </View>
     )
   }
