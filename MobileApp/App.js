@@ -2,8 +2,8 @@ import React from 'react'
 import {Image, View} from 'react-native'
 import SignIn from './src/components/SignIn'
 //import HelloWorld from './src/HelloWorld'
-import EventScreen from './src/components/EventScreen'
-import EventList from './src/components/EventList'
+import EventScreen from './src/components/events/EventScreen'
+import EventList from './src/components/events/EventList'
 import {eventList} from './src/fixtures'
 
 export default class App extends React.Component {
@@ -13,7 +13,7 @@ export default class App extends React.Component {
                 <Image source = {require('./assets/image/logo.png')}
                        resizeMode = {Image.resizeMode.contain}
                 />
-                <EventList events = {eventList}/>
+                <EventScreen event = {eventList[0]}/>
             </View>
         )
     }
