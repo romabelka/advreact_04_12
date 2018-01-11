@@ -1,4 +1,4 @@
-import {observable, action} from 'mobx'
+import {observable, action, autorun} from 'mobx'
 import firebase from 'firebase'
 import BasicStore from './BasicStore'
 
@@ -6,6 +6,16 @@ export default class AuthStore extends BasicStore {
     @observable user = null
     @observable email = ''
     @observable password = ''
+    constructor(...args) {
+        super(...args)
+
+        firebase.auth().onAuthStateChanged(this.setUser)
+
+        autorun(() => {
+            if (this.user) this.getStore('navigation').goTo('eventList')
+        })
+    }
+
 
     signIn = () => {
         firebase.auth()
@@ -17,7 +27,5 @@ export default class AuthStore extends BasicStore {
         this.user = user
         this.email = ''
         this.password = ''
-
-        this.getStore('navigation').goTo('eventList')
     }
 }
