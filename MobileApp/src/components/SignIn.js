@@ -1,19 +1,22 @@
 import React, {Component} from 'react'
 import {View, Text, TextInput, TouchableOpacity, Platform} from 'react-native'
+import {observable, computed, action} from 'mobx'
+import {observer} from 'mobx-react'
 
+@observer
 export default class SignIn extends Component {
-    state = {
-        email: '',
-        password: ''
+    @observable email = ''
+    @observable password = ''
+    @computed get name() {
+        return this.email.split('@')[0] + this.password.length
     }
 
     render() {
-        const {email, password} = this.state
         return (
             <View style = {styles.container}>
                 <View>
                     <Text style = {styles.text}>Email:</Text>
-                    <TextInput value = {email}
+                    <TextInput value = {this.email}
                                onChangeText = {this.handleEmailChange}
                                keyboarType = 'email-address'
                                style = {styles.input}
@@ -21,7 +24,7 @@ export default class SignIn extends Component {
                 </View>
                 <View>
                     <Text style = {styles.text}>Password:</Text>
-                    <TextInput value = {password}
+                    <TextInput value = {this.password}
                                onChangeText = {this.handlePasswordChange}
                                secureTextEntry
                                style = {styles.input}
@@ -34,11 +37,12 @@ export default class SignIn extends Component {
         )
     }
 
-    handleEmailChange = email => this.setState({ email })
-    handlePasswordChange = password => this.setState({ password })
+    @action handleEmailChange = email => this.email = email
+    @action handlePasswordChange = password => this.password = password
 
     handleSubmit = () => {
-        console.log('---', this.state)
+//        this.name
+//        console.log('---', this.state)
     }
 }
 
