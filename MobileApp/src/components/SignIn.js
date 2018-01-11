@@ -1,22 +1,27 @@
 import React, {Component} from 'react'
 import {View, Text, TextInput, TouchableOpacity, Platform} from 'react-native'
-import {observable, computed, action} from 'mobx'
-import {observer} from 'mobx-react'
+import {action} from 'mobx'
+import {observer, inject} from 'mobx-react'
 
-@observer
+@inject('auth') @observer
 export default class SignIn extends Component {
-    @observable email = ''
-    @observable password = ''
-    @computed get name() {
-        return this.email.split('@')[0] + this.password.length
+
+/*
+    componentWillReact() {
+        console.log('---', 432, auth.user)
+        if (auth.user) {
+            this.props.navigation.navigate('eventList')
+        }
     }
 
+*/
     render() {
+        const { auth } = this.props
         return (
             <View style = {styles.container}>
                 <View>
                     <Text style = {styles.text}>Email:</Text>
-                    <TextInput value = {this.email}
+                    <TextInput value = {auth.email}
                                onChangeText = {this.handleEmailChange}
                                keyboarType = 'email-address'
                                style = {styles.input}
@@ -24,26 +29,21 @@ export default class SignIn extends Component {
                 </View>
                 <View>
                     <Text style = {styles.text}>Password:</Text>
-                    <TextInput value = {this.password}
+                    <TextInput value = {auth.password}
                                onChangeText = {this.handlePasswordChange}
                                secureTextEntry
                                style = {styles.input}
                     />
                 </View>
-                <TouchableOpacity onPress = {this.handleSubmit}>
+                <TouchableOpacity onPress = {auth.signIn}>
                     <Text>Submit</Text>
                 </TouchableOpacity>
             </View>
         )
     }
 
-    @action handleEmailChange = email => this.email = email
-    @action handlePasswordChange = password => this.password = password
-
-    handleSubmit = () => {
-//        this.name
-//        console.log('---', this.state)
-    }
+    @action handleEmailChange = email => this.props.auth.email = email
+    @action handlePasswordChange = password => this.props.auth.password = password
 }
 
 const styles = {
