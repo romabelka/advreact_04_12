@@ -10,7 +10,7 @@ export default class SignIn extends Component {
     componentWillReact() {
         console.log('---', 432, auth.user)
         if (auth.user) {
-            this.props.navigation.navigate('eventList')
+            this.props.navigation.navigate('peopleEventList')
         }
     }
 

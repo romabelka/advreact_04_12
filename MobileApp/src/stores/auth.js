@@ -12,7 +12,7 @@ export default class AuthStore extends BasicStore {
         firebase.auth().onAuthStateChanged(this.setUser)
 
         autorun(() => {
-            if (this.user) this.getStore('navigation').goTo('eventList')
+            if (this.user) this.getStore('navigation').goTo('peopleEventList')
         })
     }
 
