@@ -19,7 +19,7 @@ class EntitiesStore extends BasicStore {
 }
 
 export function loadAllHelper(refName) {
-    return action(function () {
+    return function () {
         this.loading = true
 
         firebase.database().ref(refName)
@@ -28,7 +28,7 @@ export function loadAllHelper(refName) {
                 this.loading = false
                 this.loaded = true
             }))
-    })
+    }
 }
 
 export default EntitiesStore

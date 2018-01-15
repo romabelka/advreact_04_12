@@ -11,8 +11,14 @@ export default class AuthStore extends BasicStore {
 
         firebase.auth().onAuthStateChanged(this.setUser)
 
+        let initRedirect = false
+
         autorun(() => {
-            if (this.user) this.getStore('navigation').reset('lists')
+            const routeName = this.user ? 'lists' : 'auth'
+            if (initRedirect) {
+                this.getStore('navigation').reset(routeName)
+            }
+            initRedirect = true
         })
     }
 
