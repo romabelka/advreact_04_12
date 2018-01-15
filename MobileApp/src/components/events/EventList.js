@@ -18,7 +18,7 @@ class EventList extends Component {
             sections = {sections}
             renderSectionHeader = {({section}) => <Text style={styles.header}>{section.title}</Text>}
             renderItem = {({item}) => (
-                <TouchableOpacity onPress={() => this.props.onEventPress(item.event)}>
+                <TouchableOpacity onPress={() => this.props.onEventPress(item.event.uid)}>
                     <EventCard event = {item.event} />
                 </TouchableOpacity>
             )}

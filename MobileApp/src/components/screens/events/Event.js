@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import {View, StyleSheet} from 'react-native'
+import {inject, observer} from 'mobx-react'
 import Event from '../../events/EventScreen'
-import {data} from '../../../fixtures'
 
+@inject('events') @observer
 class EventListScreen extends Component {
     static propTypes = {
 
@@ -13,7 +14,7 @@ class EventListScreen extends Component {
     }
 
     render() {
-        return <Event event = {data.events[this.props.navigation.state.params.uid]}/>
+        return <Event event = {this.props.events.entities[this.props.navigation.state.params.uid]}/>
     }
 }
 

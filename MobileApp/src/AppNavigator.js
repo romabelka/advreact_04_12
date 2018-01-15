@@ -1,14 +1,24 @@
-import {StackNavigator} from 'react-navigation'
+import {StackNavigator, TabNavigator} from 'react-navigation'
 import EventScreen from './components/screens/events/Event'
-import EventListScreen from './components/screens/events/EventList'
 import SignInScreen from './components/screens/auth/SignIn'
+import EventList from './components/screens/events/EventList'
+import PeopleList from './components/screens/people/PeopleList'
+
+const ListsNavigator = TabNavigator({
+    events: {
+        screen: EventList
+    },
+    people: {
+        screen: PeopleList
+    }
+})
 
 const AppNavigator = StackNavigator({
     auth: {
         screen: SignInScreen
     },
-    eventList: {
-        screen: EventListScreen
+    lists: {
+        screen: ListsNavigator
     },
     event: {
         screen: EventScreen
