@@ -4,8 +4,9 @@ import BasicStore from './BasicStore'
 
 export default class AuthStore extends BasicStore {
     @observable user = null
-    @observable email = ''
-    @observable password = ''
+    @observable email = ""
+    @observable password = ""
+    @observable picture = ""
     constructor(...args) {
         super(...args)
 
@@ -33,5 +34,18 @@ export default class AuthStore extends BasicStore {
         this.user = user
         this.email = ''
         this.password = ''
+    }
+
+    @action
+    setPicture = base64 => {
+        this.picture = base64
+    }
+
+    uploadPhoto = async photo => {
+        const base64 = "data:image/jpg;base64," + photo.base64
+        this.setPicture(base64)
+        const storageRef = firebase.storage().ref()
+        const photoRef = storageRef.child(`photo/${this.user.uid}`)
+        await photoRef.putString(photo.base64, "base64") // not working
     }
 }
