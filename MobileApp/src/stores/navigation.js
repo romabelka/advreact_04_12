@@ -23,6 +23,10 @@ export default class NavigationStore extends BasicStore {
         }))
     }
 
+    goBack() {
+        this.dispatch(NavigationActions.back())
+    }
+
     reset(routeName, params) {
         const action = NavigationActions.reset({
             index: 0,

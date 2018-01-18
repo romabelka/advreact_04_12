@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "base64-arraybuffer": "^0.1.5",
     "expo": "^23.0.4",
     "firebase": "^4.8.1",
     "mobx": "^3.4.1",

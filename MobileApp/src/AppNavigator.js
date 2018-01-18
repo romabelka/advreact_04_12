@@ -4,6 +4,7 @@ import SignInScreen from './components/screens/auth/SignIn'
 import EventList from './components/screens/events/EventList'
 import EventMap from './components/screens/events/EventMap'
 import PeopleList from './components/screens/people/PeopleList'
+import PersonPhoto from './components/screens/people/PersonPhoto'
 
 const ListsNavigator = TabNavigator({
     events: {
@@ -24,6 +25,9 @@ const AppNavigator = StackNavigator({
     event: {
         screen: EventMap
     },
+    personPhoto: {
+        screen: PersonPhoto
+    }
 })
 
 export default AppNavigator

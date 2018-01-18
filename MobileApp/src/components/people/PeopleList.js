@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {inject, observer} from 'mobx-react'
+import {inject, observer, Observer} from 'mobx-react'
 import {TouchableOpacity, Text, SectionList, ActivityIndicator, StyleSheet} from 'react-native'
 import PersonCard from './PersonCard'
 import {email, web} from 'react-native-communications'
@@ -17,19 +17,22 @@ class PeopleList extends Component {
     }
 
     render() {
-        const {onPersonPress, people} = this.props
+        const {onLongPress, people} = this.props
         if (people.loading) return <ActivityIndicator size='large'/>
 
         return <SectionList
             sections = {people.sections}
             renderSectionHeader = {({section}) => <Text style={styles.header}>{section.title}</Text>}
-            renderItem = {({item}) => <TouchableOpacity onPress = {this.handlePress}>
+            renderItem = {({item}) => <TouchableOpacity onPress = {this.handlePress}
+                                                        onLongPress = {onLongPress.bind(null, item.key)}
+            >
                 <PersonCard person = {item.person} />
             </TouchableOpacity>}
         />
     }
 
     handlePress = () => {
+        console.log('---', 2)
         web('http://hello.world')
     }
 }
